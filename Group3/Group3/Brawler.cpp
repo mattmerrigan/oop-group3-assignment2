@@ -28,3 +28,10 @@ void Brawler::SetStrength(int strength) {
 int Brawler::GetStrength() const {
     return strength_;
 }
+
+void Brawler::Brawl(GameCharacter &character) {
+    float currentHealth = character.GetHealth();
+    float healthLoss = 0.05 * currentHealth;
+    float newHealth = currentHealth - healthLoss;
+    character.SetHealth(newHealth);
+}

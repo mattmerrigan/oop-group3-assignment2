@@ -25,4 +25,6 @@ public:
 
     void SetStrength(int strength);
     int GetStrength() const;
+
+    void Brawl(GameCharacter &character);
 };

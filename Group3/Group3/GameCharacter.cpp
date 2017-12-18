@@ -69,4 +69,8 @@ void GameCharacter::Eat() {
 
     health_ += (float) 0.25 * unitsConsumed;
     food_ -= unitsConsumed;
+
+    if (health_ > 100.0f) {
+        health_ = 100.0f;
+    }
 }
