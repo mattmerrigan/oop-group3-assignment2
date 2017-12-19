@@ -1,4 +1,4 @@
-#pragma once
+                                                                                                  #pragma once
 /*
 * Brawler.h
 *
@@ -27,4 +27,5 @@ public:
     int GetStrength() const;
 
     void Brawl(GameCharacter &character);
+    virtual void Sleep();
 };

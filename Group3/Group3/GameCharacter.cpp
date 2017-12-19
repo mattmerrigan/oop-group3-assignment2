@@ -74,3 +74,11 @@ void GameCharacter::Eat() {
         health_ = 100.0f;
     }
 }
+
+void GameCharacter::Run() {
+    state_ = CharacterState::Running;
+}
+
+void GameCharacter::Walk() {
+    state_ = CharacterState::Walking;
+}

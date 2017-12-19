@@ -12,7 +12,31 @@ namespace Assignment_UnitTests
     TEST_CLASS(CharacterManagement)
     {
     public:
+        TEST_METHOD(TestGameCharacterWalk)
+        {
+            //GIVEN you construct a Brawler with the state Idle 
+            CharacterState expectedBrawlerState = CharacterState::Idle;
+            Brawler brawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80};
+            //WHEN you invoke the Walk method
+            brawler.Walk();
+            CharacterState actualBrawlerState = brawler.GetState();
+            //THEN the characters state changes from Idle to Walking
+            //Assert::AreEqual(expectedBrawlerState, actualBrawlerState);
+            Assert::IsTrue(actualBrawlerState == CharacterState::Walking);
+        }
 
+        TEST_METHOD(TestGameCharacterRunning)
+        {
+            //GIVEN you construct a Brawler with the state Idle 
+            CharacterState expectedBrawlerState = CharacterState::Idle;
+            Brawler brawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            //WHEN you invoke the Running method
+            brawler.Run();
+            CharacterState actualBrawlerState = brawler.GetState();
+            //THEN the characters state changes from Idle to Walking
+            //Assert::AreEqual(expectedBrawlerState, actualBrawlerState);
+            Assert::IsTrue(actualBrawlerState == CharacterState::Running);
+        }
         TEST_METHOD(TestBrawlerConstructor)
         {
             //GIVEN I construct a brawler called Jim
@@ -63,7 +87,7 @@ namespace Assignment_UnitTests
         TEST_METHOD(TestEatIncreasesHealth)
         {
 
-            //	Consumes 20% of the available food. Each unit (1) of food consumed will add 0.25 units of health to the character.
+            //Consumes 20% of the available food. Each unit (1) of food consumed will add 0.25 units of health to the character.
             //Tests that health increases correctly by eat function
             //GIVEN I construct a brawler called Jim with 50 units of health
             float expectedHealth{ 52.5f }, actualHealth; //(health should not exceed 100)
@@ -102,11 +126,11 @@ namespace Conflict_UnitTests
     TEST_CLASS(Conflict)
     {
     public:
-        TEST_METHOD(BrawlAttack)
+        TEST_METHOD(TestBrawlAttackDefending)
         {
-            //Test that a characters health is reduced by 50% when injured with a brawl attack
+            //Test that a characters health is reduced by 5% when injured with a brawl attack
             //GIVEN I construct a brawler called Jim
-            //  AND I construct another brawler called Jane
+            //AND I construct another brawler called Jane
             float expectedHealth{ 95 }, actualHealth;
             Brawler jimBrawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
             Brawler janeBrawler{ "Jane", 100, 120, 50, CharacterState::Defending, 60, 80 };
@@ -115,6 +139,86 @@ namespace Conflict_UnitTests
             actualHealth = janeBrawler.GetHealth();
 
             //THEN her health will decrease by 5%
+            Assert::AreEqual(expectedHealth, actualHealth);
+        }
+
+        TEST_METHOD(TestBrawlAttackSleeping)
+        {
+            //Test that a characters health is reduced by 50% when injured with a brawl attack
+            //GIVEN I construct a brawler called Jim
+            //AND I construct another brawler called Jane
+            float expectedHealth{ 50 }, actualHealth;
+            Brawler jimBrawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            Brawler janeBrawler{ "Jane", 100, 120, 50, CharacterState::Sleeping, 60, 80 };
+            //WHEN I injure Jane (who has a health of 100) and is in the Sleeping state with a Brawl attack
+            jimBrawler.Brawl(janeBrawler);
+            actualHealth = janeBrawler.GetHealth();
+
+            //THEN her health will decrease by 50%
+            Assert::AreEqual(expectedHealth, actualHealth);
+        }
+
+        TEST_METHOD(TestBrawlAttackRunning)
+        {
+            //Test that a characters health is reduced by 10% when injured with a brawl attack
+            //GIVEN I construct a brawler called Jim
+            //AND I construct another brawler called Jane who is in the Running state
+            float expectedHealth{ 90 }, actualHealth;
+            Brawler jimBrawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            Brawler janeBrawler{ "Jane", 100, 120, 50, CharacterState::Running, 60, 80 };
+            //WHEN I brawl attack Jane (who has a health of 100) with Jim
+            jimBrawler.Brawl(janeBrawler);
+            actualHealth = janeBrawler.GetHealth();
+
+            //THEN her health will decrease by 10%
+            Assert::AreEqual(expectedHealth, actualHealth);
+        }
+
+        TEST_METHOD(TestBrawlAttackWalking)
+        {
+            //Test that a characters health is reduced by 10% when injured with a brawl attack
+            //GIVEN I construct a brawler called Jim
+            //AND I construct another brawler called Jane who is in the Walking state
+            float expectedHealth{ 90 }, actualHealth;
+            Brawler jimBrawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            Brawler janeBrawler{ "Jane", 100, 120, 50, CharacterState::Walking, 60, 80 };
+            //WHEN I brawl attack Jane (who has a health of 100) with Jim
+            jimBrawler.Brawl(janeBrawler);
+            actualHealth = janeBrawler.GetHealth();
+
+            //THEN her health will decrease by 10%
+            Assert::AreEqual(expectedHealth, actualHealth);
+        }
+
+        TEST_METHOD(TestBrawlAttackIdle)
+        {
+            //Test that a characters health is reduced by 10% when injured with a brawl attack
+            //GIVEN I construct a brawler called Jim
+            //AND I construct another brawler called Jane who is in the Idle state
+            float expectedHealth{ 90 }, actualHealth;
+            Brawler jimBrawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            Brawler janeBrawler{ "Jane", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            //WHEN I brawl attack Jane (who has a health of 100) with Jim
+            jimBrawler.Brawl(janeBrawler);
+            actualHealth = janeBrawler.GetHealth();
+
+            //THEN her health will decrease by 10%
+            Assert::AreEqual(expectedHealth, actualHealth);
+        }
+
+        TEST_METHOD(TestBrawlAttackDead)
+        {
+            //Test that a characters health is not reduced when attacked with a brawl attack
+            //GIVEN I construct a brawler called Jim
+            //AND I construct another brawler called Jane who is in the Dead state
+            float expectedHealth{ 0 }, actualHealth;
+            Brawler jimBrawler{ "Jim", 100, 120, 50, CharacterState::Idle, 60, 80 };
+            Brawler janeBrawler{ "Jane", 0, 120, 50, CharacterState::Dead, 60, 80 };
+            //WHEN I brawl attack Jane (who has a health of 0) with Jim
+            jimBrawler.Brawl(janeBrawler);
+            actualHealth = janeBrawler.GetHealth();
+
+            //THEN her health will remain 0
             Assert::AreEqual(expectedHealth, actualHealth);
         }
         /*

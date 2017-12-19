@@ -37,4 +37,8 @@ public:
     void SetState(CharacterState state);
     CharacterState GetState() const;
     void Eat();
+    void Walk();
+    void Run();
+    virtual void Sleep()=0;
+
 };
